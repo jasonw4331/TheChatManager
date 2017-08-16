@@ -9,6 +9,11 @@ use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 
 class SetPrefix extends PluginCommand {
+	/**
+	 * SetPrefix constructor.
+	 *
+	 * @param TheChatManager $plugin
+	 */
 	public function __construct(TheChatManager $plugin) {
 		parent::__construct($plugin->getLanguage()->get("setprefix.name"), $plugin);
 		$this->setPermission("ChatManager.command.setPrefix");
@@ -28,7 +33,13 @@ class SetPrefix extends PluginCommand {
 		if(!$this->testPermission($sender)) {
 			return true;
 		}
-		//TODO
+		if(!$sender instanceof Player) {
+			return true;
+		}
+		$levelName = $this->getPlugin()->getConfig()->get("enable-multiworld-chat") ? $sender->getLevel()->getName() : null;
+		$prefix = str_replace("{BLANK}", ' ', implode('', $args));
+		$this->getPlugin()->setPrefix($prefix, $sender, $levelName);
+		$sender->sendMessage($this->getPlugin()->getLanguage()->translateString("setprefix.success", [$prefix]));
 		return true;
 	}
 
@@ -46,19 +57,13 @@ class SetPrefix extends PluginCommand {
 	 */
 	public function generateCustomCommandData(Player $player) : array {
 		$commandData = parent::generateCustomCommandData($player);
-		$players = [];
-		foreach($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
-			$players[] = $player->getName();
-		}
-		sort($players, SORT_FLAG_CASE);
-		$worlds = [];
-		foreach($this->getPlugin()->getServer()->getLevels() as $level) {
-			if(!$level->isClosed()) {
-				$worlds[] = $level->getName();
-			}
-		}
-		sort($worlds, SORT_FLAG_CASE);
-		$commandData["overloads"]["default"]["input"]["parameters"] = []; //TODO client command syntax
+		$commandData["overloads"]["default"]["input"]["parameters"] = [
+			[
+				"name" => "prefix",
+				"type" => "rawtext",
+				"optional" => false
+			]
+		];
 		$commandData["permission"] = $this->getPermission();
 		return $commandData;
 	}

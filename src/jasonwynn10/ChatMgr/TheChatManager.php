@@ -15,7 +15,7 @@ use pocketmine\utils\TextFormat;
 
 class TheChatManager extends PluginBase implements Listener {
 	/** @var ThePermissionManager $permManager */
-	public $permManager;
+	private $permManager;
 
 	/** @var BaseLang $baseLang */
 	private $baseLang;
@@ -37,6 +37,10 @@ class TheChatManager extends PluginBase implements Listener {
 
 	public function getLanguage() : BaseLang {
 		return $this->baseLang;
+	}
+
+	public function getPermissionManager() : ThePermissionManager {
+		return $this->permManager;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 name: TheChatManager
 main: jasonwynn10\ChatMgr\TheChatManager
-version: 0.1.0
+version: 0.1.2
 api:
  - 3.0.0
  - 3.0.0-ALPHA7

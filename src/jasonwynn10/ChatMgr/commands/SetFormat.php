@@ -9,9 +9,15 @@ use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 
 class SetFormat extends PluginCommand {
+	/**
+	 * SetFormat constructor.
+	 *
+	 * @param TheChatManager $plugin
+	 */
 	public function __construct(TheChatManager $plugin) {
 		parent::__construct($plugin->getLanguage()->get("setformat.name"), $plugin);
 		$this->setPermission("ChatManager.command.setFormat");
+		$this->setAliases([$this->getPlugin()->getLanguage()->get("setformat.alias")]);
 		$this->setUsage($plugin->getLanguage()->get("setformat.usage"));
 		$this->setDescription($plugin->getLanguage()->get("setformat.desc"));
 		$this->setPermissionMessage($plugin->getLanguage()->get("nopermission"));
@@ -28,7 +34,10 @@ class SetFormat extends PluginCommand {
 		if(!$this->testPermission($sender)) {
 			return true;
 		}
-		//TODO
+		if(!$sender instanceof Player) {
+			return true;
+		}
+		$sender->sendMessage($this->getPlugin()->getLanguage()->translateString("setformat.success"));
 		return true;
 	}
 
@@ -46,19 +55,31 @@ class SetFormat extends PluginCommand {
 	 */
 	public function generateCustomCommandData(Player $player) : array {
 		$commandData = parent::generateCustomCommandData($player);
-		$players = [];
-		foreach($this->getPlugin()->getServer()->getOnlinePlayers() as $player) {
-			$players[] = $player->getName();
-		}
-		sort($players, SORT_FLAG_CASE);
+		$groups = $this->getPlugin()->getPermissionManager()->getGroups()->getGroupsConfig()->getAll(true);
 		$worlds = [];
 		foreach($this->getPlugin()->getServer()->getLevels() as $level) {
-			if(!$level->isClosed()) {
-				$worlds[] = $level->getName();
-			}
+			$worlds[] = $level->getName();
 		}
 		sort($worlds, SORT_FLAG_CASE);
-		$commandData["overloads"]["default"]["input"]["parameters"] = []; //TODO client command syntax
+		$commandData["overloads"]["default"]["input"]["parameters"] = [
+			[
+				"name" => "group",
+				"type" => "stringenum",
+				"optional" => false,
+				"enum_values" => $groups
+			],
+			[
+				"name" => "worlds",
+				"type" => "stringenum",
+				"optional" => false,
+				"enum_values" => $worlds
+			],
+			[
+				"name" => "format",
+				"type" => "rawtext",
+				"optional" => false
+			]
+		];
 		$commandData["permission"] = $this->getPermission();
 		return $commandData;
 	}
