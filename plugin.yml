@@ -1,0 +1,40 @@
+name: TheChatManager
+main: jasonwynn10\ChatMgr\TheChatManager
+version: 0.1.0
+api:
+ - 3.0.0
+ - 3.0.0-ALPHA7
+authors:
+ - jasonwynn10
+description: "A customizable chat formatting plugin for PMMP servers"
+depend:
+ - ThePermissionManager
+permissions:
+  ChatManager:
+    default: op
+    children:
+      ChatManager.command:
+        default: op
+        children:
+          ChatManager.command.setFormat:
+            default: op
+          ChatManager.command.setNametag:
+            default: op
+          ChatManager.command.setPrefix:
+            default: op
+            children:
+              ChatManager.command.setPrefix.self:
+                default: true
+              ChatManager.command.setPrefix.other:
+                default: true
+          ChatManager.command.setSuffix:
+            default: op
+            children:
+              ChatManager.command.setSuffix.self:
+                default: true
+              ChatManager.command.setSuffix.other:
+                default: op
+      ChatManager.coloredTag:
+        default: true
+      ChatManager.coloredMessages:
+        default: true
