@@ -7,6 +7,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
+use pocketmine\utils\TextFormat;
 
 class SetFormat extends PluginCommand {
 	/**
@@ -36,6 +37,30 @@ class SetFormat extends PluginCommand {
 		}
 		if(!$sender instanceof Player) {
 			return true;
+		}
+		if(empty($args)) {
+			return false;
+		}
+		$group = $args[0];
+		if(!in_array($group, $this->getPlugin()->getPermissionManager()->getGroups()->getGroupsConfig()->getAll(true)) and !$this->getPlugin()->getPermissionManager()->isAlias($group)) {
+			$sender->sendMessage(TextFormat::DARK_RED.$this->getPlugin()->getLanguage()->translateString("invalidgroup", [$group]));
+			return true;
+		}
+		if(isset($args[1])) {
+			$world = $args[1];
+			if($this->getPlugin()->getServer()->isLevelGenerated($world)) {
+				$sender->sendMessage($this->getPlugin()->getLanguage()->translateString("invalidworld", [$world]));
+				return true;
+			}
+			if(isset($args[2])) {
+				$levelName = $this->getPlugin()->getConfig()->get("enable-multiworld-chat", false) ? $world : "";
+				$chatFormat = implode(" ", array_slice($args, 2));
+				$this->getPlugin()->setOriginalChatFormat($group, $chatFormat, $levelName);
+			}else{
+				return false;
+			}
+		}else{
+			return false;
 		}
 		$sender->sendMessage($this->getPlugin()->getLanguage()->translateString("setformat.success"));
 		return true;

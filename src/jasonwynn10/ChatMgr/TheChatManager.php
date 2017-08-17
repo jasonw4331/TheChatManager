@@ -84,6 +84,8 @@ class TheChatManager extends PluginBase implements Listener {
 
 	#API
 
+	# Colors
+
 	/**
 	 * @param string $string
 	 *
@@ -146,6 +148,8 @@ class TheChatManager extends PluginBase implements Listener {
 		return $string;
 	}
 
+	# Prefix
+
 	/**
 	 * @param Player $player
 	 * @param string $levelName
@@ -175,6 +179,8 @@ class TheChatManager extends PluginBase implements Listener {
 		}
 		return $this->players->save();
 	}
+
+	# Suffix
 
 	/**
 	 * @param Player $player
@@ -206,6 +212,8 @@ class TheChatManager extends PluginBase implements Listener {
 		return $this->players->save();
 	}
 
+	# Chat
+
 	/**
 	 * @param Player $player
 	 * @param string $message
@@ -235,11 +243,11 @@ class TheChatManager extends PluginBase implements Listener {
 	/**
 	 * @param string $group
 	 * @param string $format
-	 * @param string|null $levelName
+	 * @param string $levelName
 	 *
 	 * @return bool
 	 */
-	public function setOriginalChatFormat(string $group, string $format, string $levelName = null) : bool {
+	public function setOriginalChatFormat(string $group, string $format, string $levelName = "") : bool {
 		if(empty($levelName)){
 			$this->getConfig()->setNested("groups.{$group}.nametag", $format);
 		}else{
@@ -247,6 +255,8 @@ class TheChatManager extends PluginBase implements Listener {
 		}
 		return $this->getConfig()->save();
 	}
+
+	# Nametag
 
 	/**
 	 * @param Player $player
@@ -283,11 +293,11 @@ class TheChatManager extends PluginBase implements Listener {
 	/**
 	 * @param string $group
 	 * @param string $nameTag
-	 * @param string|null $levelName
+	 * @param string $levelName
 	 *
 	 * @return bool
 	 */
-	public function setOriginalNametag(string $group, string $nameTag, string $levelName = null) : bool {
+	public function setOriginalNametag(string $group, string $nameTag, string $levelName = "") : bool {
 		if(empty($levelName)){
 			$this->getConfig()->setNested("groups.{$group}.nametag", $nameTag);
 		}else{
@@ -295,7 +305,9 @@ class TheChatManager extends PluginBase implements Listener {
 		}
 		return $this->getConfig()->save();
 	}
-	
+
+	# General
+
 	/**
 	 * @param string $string
 	 * @param Player $player
